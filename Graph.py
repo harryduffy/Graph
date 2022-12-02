@@ -24,24 +24,30 @@ class Graph:
     def get_vertices(self):
         return self._vertices
 
-    def dfs_util(self, v, visited):
- 
-        # Mark the current node as visited
-        visited.append(v)
-        print(v.get_id())
- 
-        # recurse through the vertices adjacent to this vertex
-        for adj in v.get_edges():
-
-            # only visit unvisited vertices
-            if adj not in visited:
-                self.dfs_util(adj, visited)
-
-    def DFS(self, v):
- 
+    def dfs(self, begin_id: str, end_id: str):
+        
         visited = []
+        stack = []
  
-        self.dfs_util(v, visited)
+        self.dfs_inner(visited, begin_id, end_id, stack)
+
+    def dfs_inner(self, visited, begin_id, end_id, stack):
+
+        stack.append(begin_id)
+        visited.append(begin_id)
+        if (begin_id.get_id() == end_id.get_id()):
+    
+            for i in stack:
+                print(i.get_id())
+
+            return
+        
+        for j in begin_id.get_edges():
+            
+            if (j not in visited):
+                self.dfs_inner(visited, j, end_id, stack)
+                    
+        del stack[-1]
 
 # testing
 g = Graph()
@@ -51,20 +57,19 @@ A = g.add_vertex('A')
 B = g.add_vertex('B')
 C = g.add_vertex('C')
 D = g.add_vertex('D')
+E = g.add_vertex('E')
 
 # create edges
 g.add_edge(A, B)
 g.add_edge(B, D)
 g.add_edge(A, C)
+g.add_edge(C, E)
+g.add_edge(B, E)
 
 """
 A - B - D
-|
-C
+|   |
+C - E
 """
 
-g.DFS(B)
-
-
-
-
+g.dfs(D, E)
